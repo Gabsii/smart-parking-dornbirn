@@ -1,0 +1,12 @@
+Requierements for this project:
+  -Arduino Uno
+  -Lora Module
+  -Ultrasonic sensor
+  -Solar Panel
+  
+  Features:
+    -distance measurement and logic for the parking system  ✔
+    -data transmission  🞬
+    -power saving 🞬
+    -power monitoring 🞬
+ 
