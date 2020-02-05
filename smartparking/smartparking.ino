@@ -1,7 +1,6 @@
 //used Libraries
 //======================================================================================================
-#include <Ultrasonic.h>   //distance sensor (Ultrasonic distance sensor)
-//#include "LowPower.h"     
+#include <Ultrasonic.h>   //distance sensor (Ultrasonic distance sensor) 
 //#include <lmic.h>
 //#include <hal/hal.h>
 //#include <SPI.h>
@@ -10,8 +9,8 @@
 
 //defined Pins
 //======================================================================================================
-#define TRIG_PIN 9      //ultrasonic sensor trigger pin to arduino pin 5   
-#define ECHO_PIN 10      //ultrasonic sensor echo    pin to arduino pin 6
+#define TRIG_PIN 9      //ultrasonic sensor trigger pin is connected to arduino pin 9   
+#define ECHO_PIN 10      //ultrasonic sensor echo pin is connected to arduino pin 10
 #define BAUDRATE 9600   //for debugging and testing
 
 //defined stuff
@@ -33,8 +32,8 @@ bool park_flag=false;
 bool park_status=false;
 int park_time=0;
 
+//for sleep mode // future update
 //bool sleep_flag=false;  
-
 //int timer2_softcount=0;         
 //int timer2_softcount_sec=0;         
 
@@ -67,44 +66,44 @@ void timer1_setup(){
 void setup() {
   timer1_setup();         //timer1 setup 
   //timer2_setup();         //timer2 setup
-  Serial.begin(9600);     //for debugging and testing
+  Serial.begin(9600);     
 }
 
-//while(1)
+//LOOP
 //======================================================================================================
 void loop() {
   parkingsensor.measure();      //reads distance to car in cm 
   distance_cm=parkingsensor.get_cm(); 
   
-   if((distance_cm <= distance_threshold)&&(!park_status)){      //if the distance is under 50cm and the park flag is not set then it starts checking if the car is parking or not.
+   if((distance_cm <= distance_threshold)&&(!park_status)){      //if the distance is under 50cm and the park status is not set then it starts checking if the car is parking or not.
     park_flag=true;   
    }
-   if((distance_cm > distance_threshold)&&park_status){    //if the distance is bigger then the threshold it should reset the flag and status
+   if((distance_cm > distance_threshold)&&park_status){    //if the distance is bigger then the threshold it should check again if the car is trying to park or not
     park_flag=false;
    }
 
    if(park_status==park_flag){
     park_time=0;
    }
-   delay(1000);
-              Serial.print("park_threshcheck: ");
+   delay(1000);   //wait a sec and print data
+              Serial.print("park_threshcheck: ");   //time since park_flag is changed
               Serial.print(park_time);
               Serial.print("     ");
-              Serial.print("distance: ");
+              Serial.print("distance: ");           //current distance to car
               Serial.print(distance_cm);
               Serial.print("     ");
-              Serial.print("Millis: ");
+              Serial.print("Millis: ");             //time since microcontroller started
               Serial.println(millis());
 }
 
 
 //======================================================================================================
-ISR(TIMER1_OVF_vect){   //every sec...
+ISR(TIMER1_OVF_vect){   //triggers every second
   
   TCNT1=timer1_preload;  //load value for timer to hit one second precicly
   
  
-  if((park_time<=park_time_threshold)&&park_flag){       //start counting if the slot is taken
+  if((park_time<=park_time_threshold)&&park_flag){       //start counting if the slot is taken and distnace under threshold
     if(distance_cm<distance_threshold){
       park_time++;
     }
@@ -119,7 +118,7 @@ ISR(TIMER1_OVF_vect){   //every sec...
               Serial.println("                      Jetzt ist eingeparkt!!!!!!!");
   }
 
-  if((park_time<=park_out_time_threshold)&&(!park_flag)){       //start countig if slot is freed
+  if((park_time<=park_out_time_threshold)&&(!park_flag)){       //start counting if slot is freed and distance over the threshold
     if(distance_cm>distance_threshold){
       park_time++;
     }
@@ -136,65 +135,3 @@ ISR(TIMER1_OVF_vect){   //every sec...
 }
 
 //======================================================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//======================================================================================================
-/*/ for sleep mode...
-void timer2_setup(){
-  TCCR2A=0x00;
-  TCCR2B=0x00;
-
-  //Normal Mode //Prescaler is set to 1024          
-  TCCR2B|=(1<<CS12);
-  TCCR2B|=(1<<CS10);
-
-  //Interrupt enable
-  TIMSK2=0x00;
-  TIMSK2|=(1<<TOIE0);     //enable timer overflow interrupt
-
-  TCNT2=timer2_preload;    //load value for timer to hit
-}
-/*/
-
-
-
-/*/
-ISR(TIMER2_OVF_vect){   //every 10ms  // page 49 datasheet
-  TCNT2=timer2_preload;
-  if(timer2_softcount<timer2_softload){   // 1s
-    timer2_softcount++;
-  }
-  if(timer2_softcount>=timer2_softload){  //1min
-    timer2_softcount_sec++; 
-    timer2_softcount=0;
-    //digitalWrite(13, ! digitalRead(13));
-  }
-   
-  if((timer2_softcount_sec>=sleep_time)&&sleep_flag){
-    timer2_softcount_sec=0;
-    timer2_softcount=0;    
-    //leave sleep mode and check    
-  }
-}
-aasdasdasdasdasad
-/*/
-
