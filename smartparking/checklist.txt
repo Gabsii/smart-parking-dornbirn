@@ -1,6 +1,6 @@
-Requierements for this project:
+Requirements for this project:
   -Arduino Uno
-  -LoRa Module
+  -Dragino LoRa Module
   -Ultrasonic sensor
   -Solar Panel
   
