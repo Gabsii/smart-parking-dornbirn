@@ -1,4 +1,4 @@
-f//used Libraries
+//used Libraries
 //======================================================================================================
 #include <Ultrasonic.h>   //distance sensor (Ultrasonic distance sensor) 
 #include <lmic.h>
@@ -9,8 +9,8 @@ f//used Libraries
 
 //defined Pins
 //======================================================================================================
-#define TRIG_PIN 12      //ultrasonic sensor trigger pin to arduino pin 5   
-#define ECHO_PIN 13      //ultrasonic sensor echo    pin to arduino pin 6
+#define TRIG_PIN 12      //ultrasonic sensor trigger pin to arduino pin   
+#define ECHO_PIN 13      //ultrasonic sensor echo    pin to arduino pin 
 #define BAUDRATE 9600   //for debugging and testing
 
 //defined stuff
